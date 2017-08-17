@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ReplyBBS">
+
+	<!-- Use type aliases to avoid typing the full classname every time. -->
+	<typeAlias alias="ReplyBBSDto" type="com.academy.replybbs.service.ReplyBBSDto" />
+
+	<!-- Result maps describe the mapping between the columns returned from 
+		a query, and the class properties. A result map isn't necessary if the columns 
+		(or aliases) match to the properties exactly. -->
+	<resultMap id="ReplyBBSDtoResult" class="ReplyBBSDto">
+		<result property="no" column="no" />
+		<result property="id" />
+		<result property="title" />
+		<result property="content" />
+		<result property="postdate" />
+		<result property="refer" />
+		<result property="step" />
+		<result property="depth" />
+		<result property="name" />
+	</resultMap>
+
+	<select id="ReplyBBS.Login" parameterClass="java.util.Map" resultClass="int">
+		SELECT COUNT(*) FROM MEMBER WHERE ID=#id# AND PWD=#pwd#
+	</select>
+	
+	<select id="ReplyBBS.list" parameterClass="java.util.Map" resultMap="ReplyBBSDtoResult" >
+		SELECT * FROM (SELECT T.*,ROWNUM R FROM (SELECT RE.*,NAME FROM MEMBER M JOIN REPLYBBS RE ON M.ID=RE.ID 
+		<isNotNull property="searchColumn">
+			WHERE $searchColumn$ LIKE '%' || #searchWord# || '%' 
+		</isNotNull>
+		ORDER BY REFER DESC,STEP ASC) T) WHERE R BETWEEN #start# AND #end#
+	</select>
+	
+	<select id="ReplyBBS.total" parameterClass="java.util.Map" resultClass="int">
+		SELECT COUNT(*) FROM REPLYBBS RE JOIN MEMBER M ON RE.ID = M.ID 
+		<isNotNull property="searchColumn">
+			WHERE $searchColumn$ LIKE '%' || #searchWord# || '%' 
+		</isNotNull>
+	</select>
+	
+	<insert id="ReplyBBS.insert" parameterClass="ReplyBBSDto">
+		INSERT INTO REPLYBBS(NO, ID, TITLE, CONTENT, REFER) VALUES(SEQ_REPLYBBS.NEXTVAL, #id#, #title#, #content#, SEQ_REPLYBBS.CURRVAL)
+	</insert>
+	
+	<select id="ReplyBBS.one" parameterClass="java.util.Map" resultMap="ReplyBBSDtoResult">
+ 		SELECT R.*, NAME FROM MEMBER M JOIN REPLYBBS R ON M.ID = R.ID WHERE NO=#no#
+	</select>
+	
+	<update id="ReplyBBS.update" parameterClass="ReplyBBSDto" >
+		UPDATE REPLYBBS SET TITLE=#title#, CONTENT=#content# WHERE NO=#no#
+	</update>
+	
+	<delete id="ReplyBBS.delete" parameterClass="ReplyBBSDto">
+		DELETE REPLYBBS WHERE NO=#no#
+	</delete>
+	
+	<update id="ReplyBBS.reply_uqdate" parameterClass="java.util.Map">
+		UPDATE REPLYBBS SET STEP=STEP+1 WHERE REFER=#refer# AND STEP &gt; #step#
+	</update>
+	
+	<insert id="ReplyBBS.reply_insert" parameterClass="java.util.Map">
+		INSERT INTO REPLYBBS VALUES(SEQ_REPLYBBS.NEXTVAL, #id#, #title#, #content#, SYSDATE, #refer#, #step#+1, #depth#+1)
+	</insert>
+</sqlMap>

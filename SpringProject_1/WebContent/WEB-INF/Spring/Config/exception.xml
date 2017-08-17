@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean class="controller.exception.ExceptionController" />
+	
+	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver" >
+		<!-- <property name="defaultErrorView" value="/Exception_13/DefaultErrorPage.jsp" /> -->
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.NumberFormatException">/Exception_13/Exception.jsp</prop>
+				<prop key="java.lang.NullPointerException">/Exception_13/Exception.jsp</prop>
+				<prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">/FileUpDown_14/Error.jsp</prop>
+			</props>
+		</property>
+	</bean>
+
+</beans>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMapConfig      
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"      
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+
+
+<sqlMapConfig>
+
+
+	<properties resource="ibatis/ibatis.properties" />
+	<settings useStatementNamespaces="true" />
+
+
+	<!-- <transactionManager type="JDBC" commitRequired="false">
+
+		<dataSource type="SIMPLE"> 
+				<property name="JDBC.Driver" value="${DRIVER}"/> 
+				<property name="JDBC.ConnectionURL" value="${URL}"/> 
+				<property name="JDBC.Username" value="${USERNAME}"/> 
+				<property name="JDBC.Password" value="${PASSWORD}"/> 
+			</dataSource>
+		<dataSource type="JNDI">
+			<property name="DataSource" value="${JNDI_NAME}" />
+		</dataSource>
+	</transactionManager> -->
+
+
+	<sqlMap resource="ibatis/ReplyBBS_ibatis.xml" />
+
+
+</sqlMapConfig>
